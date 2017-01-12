@@ -8,6 +8,7 @@ public class Percolation
   private int num;
   private int sites=0;
   private WeightedQuickUnionUF wquf;
+  private WeightedQuickUnionUF wquf2;
 
   // object current should then connect neighbor sites
   // objet should calculate if neighbor sites are filled, fill current site.
@@ -20,6 +21,7 @@ public class Percolation
     num = n;
     id = new boolean [n*n]; // store what site are open
     wquf = new WeightedQuickUnionUF ((n*n)+2); // see what sites are connected
+    wquf2 = new WeightedQuickUnionUF ((n*n)+1); // see what sites are connected
     vsite1 = n*n;
     vsite2 = vsite1+1;
 
@@ -47,41 +49,41 @@ public class Percolation
     if ((row > 1))
     {
       if  (isOpen(row-1,col))
-        wquf.union(position-num,position);
+        {wquf.union(position-num,position);
+        wquf2.union(position-num,position);}
     }
     //row below
     if (row < num)
       {
         if  (isOpen(row+1,col))
-        wquf.union(position+num,position);
+        {wquf.union(position+num,position);
+        wquf2.union(position+num,position);}
       }
     //col to left
     if ((col > 1))
     {
       if  (isOpen(row,col-1))
-        wquf.union(position-1,position);
+        {wquf.union(position-1,position);
+        wquf2.union(position-1,position);}
     }
     //col to right
     if (col < num)
       {
         if  (isOpen(row,col+1))
-          wquf.union(position+1,position);
+          {wquf.union(position+1,position);
+          wquf2.union(position+1,position);}
       }
 
       // Connect beginning virtual site if any site in the first row is open
       if (row == 1)
-          wquf.union(position, vsite1);
+          {
+            wquf.union(position, vsite1);
+            wquf2.union(position, vsite1);
+          }
 
     //Connect ending virtual site if any of the site in the last row are open
-    if (percolates())
-      {
-        if (row == num && !isFull(row,col))
-        return;
-        else if (row == num && isFull(row,col))
-          wquf.union(vsite2,position);
-      }
-    else if (row == num)
-          wquf.union(vsite2,position);
+    if (row == num)
+          {wquf.union(vsite2,position);}
   }
 
   public boolean isOpen(int row, int col) // is site (row, col) open?
@@ -103,7 +105,7 @@ public class Percolation
 
     int position = (num * (row-1)) + (col-1);
 
-    return (id[position] && wquf.connected(vsite1,position));
+    return (id[position] && wquf2.connected(vsite1,position));
   }
 
   public int numberOfOpenSites()

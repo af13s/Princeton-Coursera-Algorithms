@@ -26,9 +26,7 @@ public class PercolationStats
         while(!trial.percolates())
             trial.open(StdRandom.uniform(1,n+1),StdRandom.uniform(1,n+1));
 
-         double sites = trial.numberOfOpenSites();
-
-        results[i] = (sites/(n*n));
+        results[i] = ((double) trial.numberOfOpenSites() / (double) (n*n));
       }
 
 
